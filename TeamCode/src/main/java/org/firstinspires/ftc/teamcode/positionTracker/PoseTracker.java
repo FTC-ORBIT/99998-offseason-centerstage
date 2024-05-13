@@ -4,8 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import org.firstinspires.ftc.teamcode.OrbitUtils.Vector;
 import org.firstinspires.ftc.teamcode.robotData.GlobalData;
-import org.firstinspires.ftc.teamcode.robotSubSystems.drivetrain.DriveTrainOmni.DrivetrainOmni;
-import org.firstinspires.ftc.teamcode.robotSubSystems.drivetrain.DriveTrainTank.DriveTrainTank;
+import org.firstinspires.ftc.teamcode.robotSubSystems.drivetrain.DriveTrain.Drivetrain;
 
 public class PoseTracker {
     private static Pose2d robotPose;
@@ -15,7 +14,7 @@ public class PoseTracker {
     private static float lastAngle = (float) robotPose.getHeading();
 
     public static void calcPose() { // * we are calling this function every cycle in the opmode.
-        robotPose = DrivetrainOmni.getPose_FieldCS();
+        robotPose = Drivetrain.getPose_FieldCS();
         calcPoseDerivatives();
     }
 
@@ -45,11 +44,11 @@ public class PoseTracker {
     }
 
     public static Vector getVelocity() {
-        return DrivetrainOmni.getVelocity_FieldCS();
+        return Drivetrain.getVelocity_FieldCS();
     }
 
     public static Vector getAcceleration() {
-        return DrivetrainOmni.getAcceleration();
+        return Drivetrain.getAcceleration();
     }
 
     public static float getSpeed() {
