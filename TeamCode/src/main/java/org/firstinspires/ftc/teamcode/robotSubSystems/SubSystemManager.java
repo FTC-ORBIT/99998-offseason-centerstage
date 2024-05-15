@@ -9,39 +9,42 @@ import org.firstinspires.ftc.teamcode.DriveByAprilTags.Camera;
 import org.firstinspires.ftc.teamcode.Sensors.OrbitGyro;
 import org.firstinspires.ftc.teamcode.positionTracker.PoseStorage;
 import org.firstinspires.ftc.teamcode.robotData.GlobalData;
+import org.firstinspires.ftc.teamcode.robotSubSystems.Arm.ArmStates;
+import org.firstinspires.ftc.teamcode.robotSubSystems.Arm.Arm;
 
 public class SubSystemManager {
 
     public static RobotState lastState = RobotState.TRAVEL;
 
     public static RobotState wanted = RobotState.TRAVEL;
+    public static ArmStates armState  = ArmStates.GROUND;
+    public static boolean  armToggleButton = false;
 
 
 
     private static RobotState getState(Gamepad gamepad) {
+        if (gamepad.b || gamepad.a || gamepad.x || gamepad.y || gamepad.back || gamepad.dpad_up){
+            armToggleButton = false;
+        }
         return gamepad.b ? RobotState.TRAVEL
                 : gamepad.a ? RobotState.INTAKE
-                : gamepad.x ? RobotState.MIN : gamepad.y ? RobotState.LOW :gamepad.start ? RobotState.DEPLETE: gamepad.dpad_up ? RobotState.FIXPIXEL : gamepad.right_bumper ? RobotState.MID: lastState;
+               :gamepad.x ? RobotState.LOW : gamepad.y ? RobotState.MID : gamepad.back ? RobotState.CLIMB:gamepad.dpad_up ? RobotState.STACK : lastState;
     }
 
     private static RobotState getStateFromWantedAndCurrent(RobotState stateFromDriver) {
 
         switch (stateFromDriver) {
+            case TRAVEL:
+                break;
             case INTAKE:
                 break;
             case LOW:
                 break;
             case MID:
                 break;
-            case HIGH:
+            case CLIMB:
                 break;
-            case TRAVEL:
-                break;
-            case DEPLETE:
-                break;
-            case FIXPIXEL:
-                break;
-            case MIN:
+            case STACK:
                 break;
 
         }
@@ -49,7 +52,6 @@ public class SubSystemManager {
     }
 
     public static void setSubsystemToState(Gamepad gamepad1, Gamepad gamepad2) {
-//        final RobotState wanted = getStateFromWantedAndCurrent(getState(gamepad1));
         wanted = getState(gamepad1);
 
 
@@ -57,24 +59,46 @@ public class SubSystemManager {
 
         switch (wanted) {
             case TRAVEL:
+              if (!armToggleButton){
+                  armState = ArmStates.GROUND;
+              }
                 break;
             case INTAKE:
+                if (!armToggleButton) {
+                    armState = ArmStates.GROUND;
+                }
+                break;
+            case STACK:
+                if (!armToggleButton) {
+                    armState = ArmStates.STACK;
+                }
                 break;
             case LOW:
-                break;
-            case HIGH:
-                break;
-            case DEPLETE:
-                break;
-            case FIXPIXEL:
-                break;
-            case MIN:
+                if (!armToggleButton) {
+                    armState = ArmStates.LOW;
+                }
                 break;
             case MID:
+                if (!armToggleButton) {
+                    armState = ArmStates.MID;
+                }
+                break;
+            case CLIMB:
+                if (!armToggleButton) {
+                    armState = ArmStates.GROUND;
+                }
                 break;
         }
+        if (gamepad1.right_stick_y != 0) {
+            armState = ArmStates.OVERRIDE;
+            armToggleButton = true;
+        }
+        Arm.operate(armState, gamepad1, gamepad2);
+
+
 
         lastState = wanted;
+
         if (gamepad1.dpad_down) OrbitGyro.resetGyro();
     }
 
@@ -88,6 +112,7 @@ public class SubSystemManager {
         }else {
             telemetry.addLine("tag not in the lib");
         }
+        telemetry.addData("armPose", Arm.currectPos);
 //        telemetry.addData("X",PoseStorage.currentPose.getX());
 //        telemetry.addData("Y",PoseStorage.currentPose.getY());
         telemetry.addData("gyro", Math.toDegrees(PoseStorage.currentPose.getHeading()));

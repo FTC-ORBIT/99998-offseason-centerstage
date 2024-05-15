@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.OrbitUtils;
 
-import com.qualcomm.robotcore.util.ElapsedTime;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class PID {
     private static final ElapsedTime timer = new ElapsedTime();
@@ -31,7 +31,7 @@ public class PID {
         this.wanted = wanted;
     }
 
-    public double update(final double current, final Telemetry telemetry) {
+    public double update(final double current) {
         telemetry.addData("wanted", wanted);
         telemetry.addData("current", current);
         final double currentError = wanted - current;

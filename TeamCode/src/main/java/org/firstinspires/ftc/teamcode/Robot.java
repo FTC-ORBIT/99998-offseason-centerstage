@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.OrbitUtils.Vector;
 import org.firstinspires.ftc.teamcode.Sensors.OrbitGyro;
 import org.firstinspires.ftc.teamcode.positionTracker.PoseStorage;
 import org.firstinspires.ftc.teamcode.robotData.GlobalData;
+import org.firstinspires.ftc.teamcode.robotSubSystems.Arm.Arm;
 import org.firstinspires.ftc.teamcode.robotSubSystems.RobotState;
 import org.firstinspires.ftc.teamcode.robotSubSystems.SubSystemManager;
 import org.firstinspires.ftc.teamcode.robotSubSystems.drivetrain.DriveTrain.Drivetrain;
@@ -36,6 +37,7 @@ public class Robot extends LinearOpMode {
         ElapsedTime robotTime = new ElapsedTime();
         robotTime.reset();
         Drivetrain.init(hardwareMap);
+        Arm.init(hardwareMap,"armMotor");
         OrbitGyro.init(hardwareMap);
         Camera.initAprilTag(hardwareMap,telemetry);
 //        OrbitColorSensor.init(hardwareMap);
