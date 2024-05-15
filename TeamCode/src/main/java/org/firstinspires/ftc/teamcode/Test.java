@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.robotData.GlobalData;
 import org.firstinspires.ftc.teamcode.robotSubSystems.Arm.Arm;
 import org.firstinspires.ftc.teamcode.robotSubSystems.Arm.ArmStates;
 import org.firstinspires.ftc.teamcode.robotSubSystems.RobotState;
-import org.firstinspires.ftc.teamcode.robotSubSystems.SubSystemManager;
 import org.firstinspires.ftc.teamcode.robotSubSystems.drivetrain.DriveTrain.Drivetrain;
 
 @Config
@@ -51,7 +50,7 @@ public class Test extends LinearOpMode {
 
         while (!isStopRequested()) {
         Arm.operate(ArmStates.OVERRIDE,gamepad1,gamepad2);
-        telemetry.addData("armPose", Arm.currectPos);
+        telemetry.addData("armPose", Arm.currentPos);
         telemetry.update();
             }
         }

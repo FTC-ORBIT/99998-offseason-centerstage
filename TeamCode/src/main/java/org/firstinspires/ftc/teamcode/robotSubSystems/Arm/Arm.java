@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.OrbitUtils.PID;
 public class Arm {
     public static DcMotor armMotor;
     public static float pos;
-    public static float currectPos;
+    public static float currentPos;
     public static float zeroPose;
     public static final PID armPID = new PID(ArmConstants.armKp,ArmConstants.armKi,ArmConstants.armKd,ArmConstants.armKf,ArmConstants.armIZone);
 public static void init(HardwareMap hardwareMap, String name){
@@ -32,13 +32,16 @@ public static void operate(ArmStates state, Gamepad gamepad1, Gamepad gamepad2){
          case MID:
              pos = ArmConstants.midPose;
              break;
+         case CLIMB:
+             pos = ArmConstants.climbPose;
+             break;
          case OVERRIDE:
              pos += -gamepad1.right_stick_y * ArmConstants.overrideFactor;
              break;
         }
-        currectPos = armMotor.getCurrentPosition() - zeroPose;
+        currentPos = armMotor.getCurrentPosition() - zeroPose;
         armPID.setWanted(pos);
-        armMotor.setPower(armPID.update(currectPos));
+        armMotor.setPower(armPID.update(currentPos));
 
         if (gamepad2.left_bumper){
             zeroPose = armMotor.getCurrentPosition();

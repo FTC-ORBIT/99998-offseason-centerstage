@@ -85,7 +85,7 @@ public class SubSystemManager {
                 break;
             case CLIMB:
                 if (!armToggleButton) {
-                    armState = ArmStates.GROUND;
+                    armState = ArmStates.CLIMB;
                 }
                 break;
         }
@@ -112,7 +112,7 @@ public class SubSystemManager {
         }else {
             telemetry.addLine("tag not in the lib");
         }
-        telemetry.addData("armPose", Arm.currectPos);
+        telemetry.addData("armPose", Arm.currentPos);
 //        telemetry.addData("X",PoseStorage.currentPose.getX());
 //        telemetry.addData("Y",PoseStorage.currentPose.getY());
         telemetry.addData("gyro", Math.toDegrees(PoseStorage.currentPose.getHeading()));
