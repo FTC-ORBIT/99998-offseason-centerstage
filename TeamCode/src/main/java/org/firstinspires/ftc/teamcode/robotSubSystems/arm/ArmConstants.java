@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robotSubSystems.Arm;
+package org.firstinspires.ftc.teamcode.robotSubSystems.arm;
 
 
 
@@ -7,7 +7,6 @@ public class ArmConstants {
     public static final float stackPose = 0;
     public static final float lowPose = 0;
     public static final float midPose = 0;
-    public static final float climbPose = 0;
     public static final float  overrideFactor = 20;
     public static final float armKp = 0.006f;
     public static final float armKi = 0.0001f;

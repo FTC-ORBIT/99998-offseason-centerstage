@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robotSubSystems.Arm;
+package org.firstinspires.ftc.teamcode.robotSubSystems.arm;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -31,9 +31,6 @@ public static void operate(ArmStates state, Gamepad gamepad1, Gamepad gamepad2){
              break;
          case MID:
              pos = ArmConstants.midPose;
-             break;
-         case CLIMB:
-             pos = ArmConstants.climbPose;
              break;
          case OVERRIDE:
              pos += -gamepad1.right_stick_y * ArmConstants.overrideFactor;

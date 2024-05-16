@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.DriveByAprilTags.Camera;
 import org.firstinspires.ftc.teamcode.Sensors.OrbitGyro;
 import org.firstinspires.ftc.teamcode.positionTracker.PoseStorage;
 import org.firstinspires.ftc.teamcode.robotData.GlobalData;
-import org.firstinspires.ftc.teamcode.robotSubSystems.Arm.Arm;
-import org.firstinspires.ftc.teamcode.robotSubSystems.Arm.ArmStates;
+import org.firstinspires.ftc.teamcode.robotSubSystems.arm.Arm;
+import org.firstinspires.ftc.teamcode.robotSubSystems.arm.ArmStates;
 import org.firstinspires.ftc.teamcode.robotSubSystems.RobotState;
 import org.firstinspires.ftc.teamcode.robotSubSystems.drivetrain.DriveTrain.Drivetrain;
 

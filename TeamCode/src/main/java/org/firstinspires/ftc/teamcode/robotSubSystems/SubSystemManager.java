@@ -9,8 +9,10 @@ import org.firstinspires.ftc.teamcode.DriveByAprilTags.Camera;
 import org.firstinspires.ftc.teamcode.Sensors.OrbitGyro;
 import org.firstinspires.ftc.teamcode.positionTracker.PoseStorage;
 import org.firstinspires.ftc.teamcode.robotData.GlobalData;
-import org.firstinspires.ftc.teamcode.robotSubSystems.Arm.ArmStates;
-import org.firstinspires.ftc.teamcode.robotSubSystems.Arm.Arm;
+import org.firstinspires.ftc.teamcode.robotSubSystems.arm.ArmStates;
+import org.firstinspires.ftc.teamcode.robotSubSystems.arm.Arm;
+import org.firstinspires.ftc.teamcode.robotSubSystems.climb.Climb;
+import org.firstinspires.ftc.teamcode.robotSubSystems.climb.ClimbStates;
 
 public class SubSystemManager {
 
@@ -19,6 +21,7 @@ public class SubSystemManager {
     public static RobotState wanted = RobotState.TRAVEL;
     public static ArmStates armState  = ArmStates.GROUND;
     public static boolean  armToggleButton = false;
+    private static ClimbStates climbState = ClimbStates.GROUND;
 
 
 
@@ -62,31 +65,37 @@ public class SubSystemManager {
               if (!armToggleButton){
                   armState = ArmStates.GROUND;
               }
+              climbState = ClimbStates.GROUND;
                 break;
             case INTAKE:
                 if (!armToggleButton) {
                     armState = ArmStates.GROUND;
                 }
+                climbState = ClimbStates.GROUND;
                 break;
             case STACK:
                 if (!armToggleButton) {
                     armState = ArmStates.STACK;
                 }
+                climbState = ClimbStates.GROUND;
                 break;
             case LOW:
                 if (!armToggleButton) {
                     armState = ArmStates.LOW;
                 }
+                climbState = ClimbStates.GROUND;
                 break;
             case MID:
                 if (!armToggleButton) {
                     armState = ArmStates.MID;
                 }
+                climbState = ClimbStates.GROUND;
                 break;
             case CLIMB:
                 if (!armToggleButton) {
-                    armState = ArmStates.CLIMB;
+                    armState = ArmStates.GROUND;
                 }
+                climbState = ClimbStates.CLIMB;
                 break;
         }
         if (gamepad1.right_stick_y != 0) {
@@ -94,7 +103,7 @@ public class SubSystemManager {
             armToggleButton = true;
         }
         Arm.operate(armState, gamepad1, gamepad2);
-
+        Climb.operate(climbState);
 
 
         lastState = wanted;
