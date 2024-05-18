@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.robotSubSystems.arm.ArmStates;
 import org.firstinspires.ftc.teamcode.robotSubSystems.arm.Arm;
 import org.firstinspires.ftc.teamcode.robotSubSystems.climb.Climb;
 import org.firstinspires.ftc.teamcode.robotSubSystems.climb.ClimbStates;
+import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.Pinch;
+import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.PinchStates;
 
 public class SubSystemManager {
 
@@ -21,7 +23,8 @@ public class SubSystemManager {
     public static RobotState wanted = RobotState.TRAVEL;
     public static ArmStates armState  = ArmStates.GROUND;
     public static boolean  armToggleButton = false;
-    private static ClimbStates climbState = ClimbStates.GROUND;
+    public static ClimbStates climbState = ClimbStates.GROUND;
+    public static PinchStates pinchState = PinchStates.CLOSED;
 
 
 
@@ -66,36 +69,50 @@ public class SubSystemManager {
                   armState = ArmStates.GROUND;
               }
               climbState = ClimbStates.GROUND;
+              pinchState = PinchStates.CLOSED;
                 break;
             case INTAKE:
                 if (!armToggleButton) {
                     armState = ArmStates.GROUND;
                 }
                 climbState = ClimbStates.GROUND;
+                pinchState = PinchStates.OPEN;
                 break;
             case STACK:
                 if (!armToggleButton) {
                     armState = ArmStates.STACK;
                 }
                 climbState = ClimbStates.GROUND;
+                pinchState = PinchStates.OPEN;
                 break;
             case LOW:
                 if (!armToggleButton) {
                     armState = ArmStates.LOW;
                 }
                 climbState = ClimbStates.GROUND;
+                if (gamepad1.left_bumper){
+                    pinchState = PinchStates.LEFT;
+                } else if (gamepad1.right_bumper) {
+                    pinchState = PinchStates.RIGHT;
+                }
                 break;
             case MID:
                 if (!armToggleButton) {
                     armState = ArmStates.MID;
                 }
                 climbState = ClimbStates.GROUND;
+                if (gamepad1.left_bumper){
+                    pinchState = PinchStates.LEFT;
+                } else if (gamepad1.right_bumper) {
+                    pinchState = PinchStates.RIGHT;
+                }
                 break;
             case CLIMB:
                 if (!armToggleButton) {
                     armState = ArmStates.GROUND;
                 }
                 climbState = ClimbStates.CLIMB;
+                pinchState = PinchStates.CLOSED;
                 break;
         }
         if (gamepad1.right_stick_y != 0) {
@@ -104,6 +121,7 @@ public class SubSystemManager {
         }
         Arm.operate(armState, gamepad1, gamepad2);
         Climb.operate(climbState);
+        Pinch.operate(pinchState);
 
 
         lastState = wanted;
