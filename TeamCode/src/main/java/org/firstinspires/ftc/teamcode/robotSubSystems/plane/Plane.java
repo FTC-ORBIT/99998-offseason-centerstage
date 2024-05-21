@@ -6,25 +6,31 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Plane {
     public static Servo servo;
+    public static Servo servo2;
     public static float pos;
+    public static float pos2;
     public static boolean leftBumper;
     public static boolean rightBumper;
     public static boolean dpad_left;
     public static boolean dpad_right;
-    public static void init(HardwareMap hardwareMap, String name){
+    public static void init(HardwareMap hardwareMap, String name, String name2){
         servo = hardwareMap.get(Servo.class,name);
+        servo2 = hardwareMap.get(Servo.class,name2);
     }
 
     public static void operate(PlaneStates state){
         switch (state){
             case STOP:
                 pos = PlaneConstants.stopPose;
+                pos2 = PlaneConstants.systemAngle;
                 break;
             case THROW:
                 pos = PlaneConstants.throwPose;
+                pos2 = PlaneConstants.systemAngle;
                 break;
         }
         servo.setPosition(pos);
+        servo2.setPosition(pos2);
     }
     public static void test(Gamepad gamepad1){
         if (gamepad1.left_bumper && !leftBumper){

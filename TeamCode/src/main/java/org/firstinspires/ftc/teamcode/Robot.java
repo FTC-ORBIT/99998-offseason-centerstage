@@ -42,7 +42,7 @@ public class Robot extends LinearOpMode {
         Arm.init(hardwareMap,"armMotor");
         Climb.init(hardwareMap,"climbServo","climbServo2");
         Pinch.init(hardwareMap,"pinchServo","pinchServo2");
-        Plane.init(hardwareMap,"planeServo");
+        Plane.init(hardwareMap,"planeServo","planeAngleServo");
         OrbitGyro.init(hardwareMap);
         Camera.initAprilTag(hardwareMap,telemetry);
 //        OrbitColorSensor.init(hardwareMap);
