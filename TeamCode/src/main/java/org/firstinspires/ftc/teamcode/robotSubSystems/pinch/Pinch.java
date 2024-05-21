@@ -29,10 +29,8 @@ public class Pinch {
                 break;
             case RIGHT:
                 pos = PinchConstants.openPose;
-                pos2 = PinchConstants.closedPose2;
                 break;
             case LEFT:
-                pos = PinchConstants.closedPose;
                 pos2 = PinchConstants.openPose2;
                 break;
         }
