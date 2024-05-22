@@ -15,6 +15,8 @@ import org.firstinspires.ftc.teamcode.robotSubSystems.climb.Climb;
 import org.firstinspires.ftc.teamcode.robotSubSystems.climb.ClimbStates;
 import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.Pinch;
 import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.PinchStates;
+import org.firstinspires.ftc.teamcode.robotSubSystems.plane.Plane;
+import org.firstinspires.ftc.teamcode.robotSubSystems.plane.PlaneStates;
 
 public class SubSystemManager {
 
@@ -125,7 +127,7 @@ public class SubSystemManager {
 
 
         lastState = wanted;
-
+        if (gamepad1.touchpad_finger_1) Plane.operate(PlaneStates.THROW);
         if (gamepad1.dpad_down) OrbitGyro.resetGyro();
     }
 
