@@ -13,6 +13,7 @@ public class Pinch {
     public static boolean rightBumper;
     public static boolean dpad_left;
     public static boolean dpad_right;
+    public static boolean firstTime = true;
     public static void init(HardwareMap hardwareMap, String name, String name2){
         servo = hardwareMap.get(Servo.class,name);
         servo2 = hardwareMap.get(Servo.class,name2);
@@ -51,11 +52,15 @@ public class Pinch {
             pos -= 0.01;
             pos2 -= 0.01;
         }
+        if (firstTime){
+            pos2 = 1;
+            firstTime = false;
+        }
         leftBumper = gamepad1.left_bumper;
         rightBumper = gamepad1.right_bumper;
         dpad_left = gamepad1.dpad_left;
         dpad_right = gamepad1.dpad_right;
-        servo.setPosition(pos);
+//        servo.setPosition(pos);
         servo2.setPosition(pos2);
     }
 }

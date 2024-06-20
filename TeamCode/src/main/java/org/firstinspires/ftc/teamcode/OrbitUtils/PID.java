@@ -32,8 +32,8 @@ public class PID {
     }
 
     public double update(final double current) {
-        telemetry.addData("wanted", wanted);
-        telemetry.addData("current", current);
+//        telemetry.addData("wanted", wanted);
+//        telemetry.addData("current", current);
         final double currentError = wanted - current;
         final double currentTime = timer.milliseconds();
         final double deltaTime = currentTime - prevTime;

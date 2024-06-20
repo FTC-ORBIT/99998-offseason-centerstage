@@ -14,11 +14,11 @@ import org.firstinspires.ftc.teamcode.robotSubSystems.arm.Arm;
 import org.firstinspires.ftc.teamcode.robotSubSystems.arm.ArmStates;
 import org.firstinspires.ftc.teamcode.robotSubSystems.RobotState;
 import org.firstinspires.ftc.teamcode.robotSubSystems.drivetrain.DriveTrain.Drivetrain;
+import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.Pinch;
 
 @Config
 @TeleOp(name = "test")
 public class Test extends LinearOpMode {
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -27,12 +27,12 @@ public class Test extends LinearOpMode {
 
         ElapsedTime robotTime = new ElapsedTime();
         robotTime.reset();
-        Drivetrain.init(hardwareMap);
-        OrbitGyro.init(hardwareMap);
-        Camera.initAprilTag(hardwareMap,telemetry);
+//        Drivetrain.init(hardwareMap);
+//        OrbitGyro.init(hardwareMap);
+//      Camera.initAprilTag(hardwareMap,telemetry);
 
 
-        OrbitGyro.resetGyroStartTeleop((float) Math.toDegrees(PoseStorage.currentPose.getHeading()));
+       /* OrbitGyro.resetGyroStartTeleop((float) Math.toDegrees(PoseStorage.currentPose.getHeading()));
         telemetry.addData("gyro", Math.toDegrees(PoseStorage.currentPose.getHeading()));
         telemetry.addData("lastAngle", OrbitGyro.lastAngle);
         telemetry.update();
@@ -42,18 +42,24 @@ public class Test extends LinearOpMode {
         GlobalData.lastTime = 0;
         GlobalData.deltaTime = 0;
         GlobalData.robotState = RobotState.TRAVEL;
-        GlobalData.hasGamePiece = false;
+        GlobalData.hasGamePiece = false; */
 
         Arm.init(hardwareMap,"armMotor");
+//        Pinch.init(hardwareMap,"pinchServo","pinchServo2");
+
         waitForStart();
 
-
         while (!isStopRequested()) {
-        Arm.operate(ArmStates.OVERRIDE,gamepad1,gamepad2);
-        telemetry.addData("armPose", Arm.currentPos);
-        telemetry.update();
-            }
+            Arm.test(gamepad1,telemetry);
         }
     }
+}
 //dani yalechan!
 // yoel yalechan!
+
+// pos from the arm test:
+// ground - 0
+// min - 2200
+// low - 2098
+// mid - 1553
+// climb - ?

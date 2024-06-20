@@ -11,12 +11,8 @@ import org.firstinspires.ftc.teamcode.positionTracker.PoseStorage;
 import org.firstinspires.ftc.teamcode.robotData.GlobalData;
 import org.firstinspires.ftc.teamcode.robotSubSystems.arm.ArmStates;
 import org.firstinspires.ftc.teamcode.robotSubSystems.arm.Arm;
-import org.firstinspires.ftc.teamcode.robotSubSystems.climb.Climb;
-import org.firstinspires.ftc.teamcode.robotSubSystems.climb.ClimbStates;
 import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.Pinch;
 import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.PinchStates;
-import org.firstinspires.ftc.teamcode.robotSubSystems.plane.Plane;
-import org.firstinspires.ftc.teamcode.robotSubSystems.plane.PlaneStates;
 
 public class SubSystemManager {
 
@@ -25,7 +21,6 @@ public class SubSystemManager {
     public static RobotState wanted = RobotState.TRAVEL;
     public static ArmStates armState  = ArmStates.GROUND;
     public static boolean  armToggleButton = false;
-    public static ClimbStates climbState = ClimbStates.GROUND;
     public static PinchStates pinchState = PinchStates.CLOSED;
 
 
@@ -36,7 +31,11 @@ public class SubSystemManager {
         }
         return gamepad.b ? RobotState.TRAVEL
                 : gamepad.a ? RobotState.INTAKE
-               :gamepad.x ? RobotState.LOW : gamepad.y ? RobotState.MID : gamepad.back ? RobotState.CLIMB:gamepad.dpad_up ? RobotState.STACK : lastState;
+                : gamepad.dpad_up ? RobotState.MIN
+                :gamepad.x ? RobotState.LOW
+                : gamepad.y ? RobotState.MID
+                : gamepad.back ? RobotState.CLIMB
+                : lastState;
     }
 
     private static RobotState getStateFromWantedAndCurrent(RobotState stateFromDriver) {
@@ -52,7 +51,7 @@ public class SubSystemManager {
                 break;
             case CLIMB:
                 break;
-            case STACK:
+            case MIN:
                 break;
 
         }
@@ -70,28 +69,24 @@ public class SubSystemManager {
               if (!armToggleButton){
                   armState = ArmStates.GROUND;
               }
-              climbState = ClimbStates.GROUND;
               pinchState = PinchStates.CLOSED;
                 break;
             case INTAKE:
                 if (!armToggleButton) {
                     armState = ArmStates.GROUND;
                 }
-                climbState = ClimbStates.GROUND;
                 pinchState = PinchStates.OPEN;
                 break;
-            case STACK:
+            case MIN:
                 if (!armToggleButton) {
-                    armState = ArmStates.STACK;
+                    armState = ArmStates.MIN;
                 }
-                climbState = ClimbStates.GROUND;
                 pinchState = PinchStates.OPEN;
                 break;
             case LOW:
                 if (!armToggleButton) {
                     armState = ArmStates.LOW;
                 }
-                climbState = ClimbStates.GROUND;
                 if (gamepad1.left_bumper){
                     pinchState = PinchStates.LEFT;
                 } else if (gamepad1.right_bumper) {
@@ -102,7 +97,6 @@ public class SubSystemManager {
                 if (!armToggleButton) {
                     armState = ArmStates.MID;
                 }
-                climbState = ClimbStates.GROUND;
                 if (gamepad1.left_bumper){
                     pinchState = PinchStates.LEFT;
                 } else if (gamepad1.right_bumper) {
@@ -111,9 +105,8 @@ public class SubSystemManager {
                 break;
             case CLIMB:
                 if (!armToggleButton) {
-                    armState = ArmStates.GROUND;
+                    armState = ArmStates.CLIMB;
                 }
-                climbState = ClimbStates.CLIMB;
                 pinchState = PinchStates.CLOSED;
                 break;
         }
@@ -122,13 +115,12 @@ public class SubSystemManager {
             armToggleButton = true;
         }
         Arm.operate(armState, gamepad1, gamepad2);
-        Climb.operate(climbState);
-        Pinch.operate(pinchState);
+//        Pinch.operate(pinchState);
 
 
         lastState = wanted;
-        if (gamepad1.touchpad_finger_1) Plane.operate(PlaneStates.THROW);
-        if (gamepad1.dpad_down) OrbitGyro.resetGyro();
+//        if (gamepad1.touchpad_finger_1) Plane.operate(PlaneStates.THROW);
+//        if (gamepad1.dpad_down) OrbitGyro.resetGyro();
     }
 
     public static void printStates(Telemetry telemetry) {

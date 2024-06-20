@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.OrbitUtils.PID;
 
 public class Arm {
@@ -23,14 +24,17 @@ public static void operate(ArmStates state, Gamepad gamepad1, Gamepad gamepad2){
          case GROUND:
              pos = ArmConstants.groundPose;
              break;
-         case STACK:
-             pos = ArmConstants.stackPose;
+         case MIN:
+             pos = ArmConstants.minPose;
              break;
          case LOW:
              pos = ArmConstants.lowPose;
              break;
          case MID:
              pos = ArmConstants.midPose;
+             break;
+         case CLIMB:
+             pos = ArmConstants.climbPose;
              break;
          case OVERRIDE:
              pos += -gamepad1.right_stick_y * ArmConstants.overrideFactor;
@@ -43,5 +47,22 @@ public static void operate(ArmStates state, Gamepad gamepad1, Gamepad gamepad2){
         if (gamepad2.left_bumper){
             zeroPose = armMotor.getCurrentPosition();
         }
+    }
+    public static void test(Gamepad gamepad1, Telemetry telemetry){
+//    currentPos = armMotor.getCurrentPosition();
+//    if (gamepad1.b){
+        armPID.setWanted(ArmConstants.armTestPos);
+//    }else {
+        armPID.setWanted(0);
+//    }
+//    armMotor.setPower(armPID.update(currentPos));
+
+    currentPos = armMotor.getCurrentPosition();
+    pos += -gamepad1.right_stick_y * ArmConstants.overrideFactor;
+    armPID.setWanted(pos);
+    armMotor.setPower(armPID.update(currentPos));
+
+    telemetry.addData("arm pose",armMotor.getCurrentPosition());
+    telemetry.update();
     }
 }
