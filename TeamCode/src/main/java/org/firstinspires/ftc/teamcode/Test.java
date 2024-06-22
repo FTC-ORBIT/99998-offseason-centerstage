@@ -44,13 +44,13 @@ public class Test extends LinearOpMode {
         GlobalData.robotState = RobotState.TRAVEL;
         GlobalData.hasGamePiece = false; */
 
-        Arm.init(hardwareMap,"armMotor");
-//        Pinch.init(hardwareMap,"pinchServo","pinchServo2");
-
+//        Arm.init(hardwareMap,"armMotor");
+        Pinch.init(hardwareMap,"pinchServo","pinchServo2");
+        Drivetrain.init(hardwareMap);
         waitForStart();
 
         while (!isStopRequested()) {
-            Arm.test(gamepad1,telemetry);
+            Pinch.test(gamepad1, telemetry);
         }
     }
 }

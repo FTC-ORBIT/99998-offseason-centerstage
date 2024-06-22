@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.robotData.GlobalData;
 import org.firstinspires.ftc.teamcode.robotSubSystems.arm.ArmStates;
 import org.firstinspires.ftc.teamcode.robotSubSystems.arm.Arm;
 import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.Pinch;
+import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.PinchConstants;
 import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.PinchStates;
 
 public class SubSystemManager {
@@ -34,7 +35,7 @@ public class SubSystemManager {
                 : gamepad.dpad_up ? RobotState.MIN
                 :gamepad.x ? RobotState.LOW
                 : gamepad.y ? RobotState.MID
-                : gamepad.back ? RobotState.CLIMB
+                : gamepad.back ? RobotState.CLIMB : gamepad.dpad_left ? RobotState.STACK
                 : lastState;
     }
 
@@ -67,7 +68,7 @@ public class SubSystemManager {
         switch (wanted) {
             case TRAVEL:
               if (!armToggleButton){
-                  armState = ArmStates.GROUND;
+                  armState = ArmStates.TRAVEL;
               }
               pinchState = PinchStates.CLOSED;
                 break;
@@ -75,7 +76,13 @@ public class SubSystemManager {
                 if (!armToggleButton) {
                     armState = ArmStates.GROUND;
                 }
-                pinchState = PinchStates.OPEN;
+                if (gamepad1.left_bumper){
+                    pinchState = PinchStates.INTAKELEFT;
+                } else if (gamepad1.right_bumper) {
+                    pinchState = PinchStates.INTAKERIGHT;
+                }else if (gamepad1.a){
+                    pinchState = PinchStates.OPEN;
+                }
                 break;
             case MIN:
                 if (!armToggleButton) {
@@ -109,33 +116,36 @@ public class SubSystemManager {
                 }
                 pinchState = PinchStates.CLOSED;
                 break;
+            case STACK:
+                if (!armToggleButton) {
+                    armState = ArmStates.STACK;
+                }
+                if (gamepad1.left_bumper){
+                    pinchState = PinchStates.INTAKELEFT;
+                } else if (gamepad1.right_bumper) {
+                    pinchState = PinchStates.INTAKERIGHT;
+                }else if (gamepad1.a){
+                    pinchState = PinchStates.OPEN;
+                }
+                break;
         }
         if (gamepad1.right_stick_y != 0) {
             armState = ArmStates.OVERRIDE;
             armToggleButton = true;
         }
         Arm.operate(armState, gamepad1, gamepad2);
-//        Pinch.operate(pinchState);
+        Pinch.operate(pinchState);
 
 
         lastState = wanted;
 //        if (gamepad1.touchpad_finger_1) Plane.operate(PlaneStates.THROW);
-//        if (gamepad1.dpad_down) OrbitGyro.resetGyro();
+        if (gamepad1.dpad_down) OrbitGyro.resetGyro();
     }
 
     public static void printStates(Telemetry telemetry) {
         telemetry.addData("Robot current state ", SubSystemManager.wanted);
         telemetry.addData("Robot last state", SubSystemManager.lastState);
-        if (Camera.targetFound){
-            telemetry.addData("tag has found",Camera.desiredTag.id);
-        }else if (Camera.skippingTagTelemetry){
-            telemetry.addData("other tag ha found, skipping",Camera.desiredTag.id);
-        }else {
-            telemetry.addLine("tag not in the lib");
-        }
         telemetry.addData("armPose", Arm.currentPos);
-//        telemetry.addData("X",PoseStorage.currentPose.getX());
-//        telemetry.addData("Y",PoseStorage.currentPose.getY());
         telemetry.addData("gyro", Math.toDegrees(PoseStorage.currentPose.getHeading()));
         telemetry.addData("lastAngle", OrbitGyro.lastAngle);
         telemetry.addData("currentTime", GlobalData.currentTime);
@@ -150,6 +160,7 @@ public class SubSystemManager {
 //        telemetry.addData("magnetic press?", MagneticSensor.getState());
 //        telemetry.addData("touchSensor press?", TouchSensor.getState());
 //        telemetry.addData("potentiometer", Potentiometer.getVolt());
+        telemetry.update();
     }
 }
 

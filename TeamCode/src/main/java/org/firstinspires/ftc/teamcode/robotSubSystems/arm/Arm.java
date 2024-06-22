@@ -12,6 +12,7 @@ public class Arm {
     public static float pos;
     public static float currentPos;
     public static float zeroPose;
+    public static float wantedPower;
     public static final PID armPID = new PID(ArmConstants.armKp,ArmConstants.armKi,ArmConstants.armKd,ArmConstants.armKf,ArmConstants.armIZone);
 public static void init(HardwareMap hardwareMap, String name){
     armMotor = hardwareMap.get(DcMotor.class,name);
@@ -36,31 +37,44 @@ public static void operate(ArmStates state, Gamepad gamepad1, Gamepad gamepad2){
          case CLIMB:
              pos = ArmConstants.climbPose;
              break;
+         case STACK:
+             pos = ArmConstants.stackPose;
+             break;
+         case TRAVEL:
+             pos = ArmConstants.travelPos;
+             break;
          case OVERRIDE:
              pos += -gamepad1.right_stick_y * ArmConstants.overrideFactor;
              break;
         }
         currentPos = armMotor.getCurrentPosition() - zeroPose;
         armPID.setWanted(pos);
-        armMotor.setPower(armPID.update(currentPos));
+        wantedPower = (float) armPID.update(currentPos);
+        wantedPower = (float) Math.min(Math.abs(wantedPower) , ArmConstants.powerLimit) * Math.signum(wantedPower);
+    if (wantedPower<0 && currentPos <300) wantedPower =  Math.max (wantedPower,-(currentPos / 300));
+
+    armMotor.setPower(wantedPower);
 
         if (gamepad2.left_bumper){
             zeroPose = armMotor.getCurrentPosition();
         }
     }
     public static void test(Gamepad gamepad1, Telemetry telemetry){
-//    currentPos = armMotor.getCurrentPosition();
-//    if (gamepad1.b){
-        armPID.setWanted(ArmConstants.armTestPos);
-//    }else {
-        armPID.setWanted(0);
-//    }
-//    armMotor.setPower(armPID.update(currentPos));
-
     currentPos = armMotor.getCurrentPosition();
-    pos += -gamepad1.right_stick_y * ArmConstants.overrideFactor;
-    armPID.setWanted(pos);
-    armMotor.setPower(armPID.update(currentPos));
+    if (gamepad1.b){
+        armPID.setWanted(0);
+    }else {
+        armPID.setWanted(ArmConstants.armTestPos);
+    }
+    wantedPower = (float) armPID.update(currentPos);
+    wantedPower = (float) Math.min(Math.abs(wantedPower) , ArmConstants.powerLimit) * Math.signum(wantedPower);
+    if (wantedPower<0 && currentPos <300) wantedPower =  Math.max (wantedPower,-(currentPos / 300));
+    armMotor.setPower(wantedPower);
+
+//    currentPos = armMotor.getCurrentPosition();
+//    pos += -gamepad1.right_stick_y * ArmConstants.overrideFactor;
+//    armPID.setWanted(pos);
+//    armMotor.setPower(armPID.update(currentPos));
 
     telemetry.addData("arm pose",armMotor.getCurrentPosition());
     telemetry.update();

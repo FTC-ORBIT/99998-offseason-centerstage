@@ -1,0 +1,48 @@
+שיר לא לשנות! אם אתה משנה אתה כבר לא סקיבדי סיגמה!
+
+
+control hub:
+
+motor:
+0 - lf
+1 - lb
+2 -
+3 -
+
+servo:
+0 - pinchServo2
+1 -
+2 -
+3 -
+4 -
+5 -
+
+other:
+imu - gyro
+
+
+
+expansion hub:
+
+motor:
+0 -
+1 - rb
+2 - armMotor
+3 - rf
+
+servo:
+
+o - pinchServo
+1 -
+2 -
+3 -
+4 -
+5 -
+
+
+other:
+
+
+
+
+

@@ -27,10 +27,10 @@ public class Drivetrain {
         motors[2] = hardwareMap.get(DcMotor.class, "lb");
         motors[3] = hardwareMap.get(DcMotor.class, "rb");
 
-        motors[0].setDirection(DcMotorSimple.Direction.FORWARD);
+        motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[1].setDirection(DcMotorSimple.Direction.REVERSE);
-        motors[2].setDirection(DcMotorSimple.Direction.REVERSE);
-
+        motors[2].setDirection(DcMotorSimple.Direction.FORWARD);
+        motors[3].setDirection(DcMotorSimple.Direction.REVERSE);
         // TODO if your initial robot position is not 0,0,0 make sure to fix the
         // position (look for the function in the documentry). might be setPoseEstimate
 
@@ -52,15 +52,12 @@ public class Drivetrain {
             stop();
         }
         else{
-            if(gamepad1.left_bumper){
-            Camera.getAprilTagDetectionOmni();
-            }else{
-                Camera.targetFound = false;
                 drive(velocity_RobotCS_W, omega);
             }
         }
 
-    }
+
+
     // did field centric
 
     public static Pose2d getPose_FieldCS() {
