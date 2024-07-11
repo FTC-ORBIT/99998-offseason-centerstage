@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.DriveByAprilTags.Camera;
 import org.firstinspires.ftc.teamcode.OrbitUtils.Vector;
 import org.firstinspires.ftc.teamcode.Sensors.OrbitGyro;
 import org.firstinspires.ftc.teamcode.positionTracker.PoseStorage;
+import org.firstinspires.ftc.teamcode.robotData.Constants;
 import org.firstinspires.ftc.teamcode.robotData.GlobalData;
 import org.firstinspires.ftc.teamcode.robotSubSystems.arm.Arm;
 import org.firstinspires.ftc.teamcode.robotSubSystems.RobotState;
@@ -38,9 +39,9 @@ public class Robot extends LinearOpMode {
         ElapsedTime robotTime = new ElapsedTime();
         robotTime.reset();
         Drivetrain.init(hardwareMap);
-        Arm.init(hardwareMap,"armMotor");
-        Pinch.init(hardwareMap,"pinchServo","pinchServo2");
-//        Plane.init(hardwareMap,"planeServo","planeAngleServo");
+        Arm.init(hardwareMap, "armMotor");
+        Pinch.init(hardwareMap, "pinchServo", "pinchServo2");
+        Plane.init(hardwareMap, "planeServo");
         OrbitGyro.init(hardwareMap);
 //        Camera.initAprilTag(hardwareMap,telemetry);
 //        OrbitColorSensor.init(hardwareMap);
@@ -66,19 +67,20 @@ public class Robot extends LinearOpMode {
         GlobalData.robotState = RobotState.TRAVEL;
 
         while (!isStopRequested()) {
-          GlobalData.currentTime = (float) robotTime.seconds();
-          Vector leftStick = new Vector(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-          float omega = gamepad1.right_trigger - gamepad1.left_trigger;
-          Drivetrain.operate(leftStick, omega , gamepad1);
-          SubSystemManager.setSubsystemToState(gamepad1 , gamepad2);
-           GlobalData.deltaTime = GlobalData.currentTime - GlobalData.lastTime;
+            while (GlobalData.currentTime - GlobalData.lastTime < Constants.teleopCycleTime) {
+                GlobalData.currentTime = (float) robotTime.seconds();
+            }
+            GlobalData.deltaTime = GlobalData.currentTime - GlobalData.lastTime;
 //           Camera.update();
             GlobalData.lastTime = GlobalData.currentTime;
-
+            Vector leftStick = new Vector(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+            float omega = gamepad1.right_trigger - gamepad1.left_trigger;
+            Drivetrain.operate(leftStick, omega, gamepad1);
+            SubSystemManager.setSubsystemToState(gamepad1, gamepad2);
             SubSystemManager.printStates(telemetry);
+            dashboard.sendTelemetryPacket(packet);
         }
     }
-
 
 
 }

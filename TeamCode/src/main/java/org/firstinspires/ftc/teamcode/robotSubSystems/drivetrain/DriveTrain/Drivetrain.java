@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.DriveByAprilTags.Camera;
 import org.firstinspires.ftc.teamcode.OrbitUtils.Vector;
 import org.firstinspires.ftc.teamcode.Sensors.OrbitGyro;
 import org.firstinspires.ftc.teamcode.robotData.GlobalData;
+import org.firstinspires.ftc.teamcode.robotSubSystems.RobotState;
+import org.firstinspires.ftc.teamcode.robotSubSystems.SubSystemManager;
 
 public class Drivetrain {
 
@@ -44,9 +46,20 @@ public class Drivetrain {
     public static void operate(final Vector velocity_W, float omega , Gamepad gamepad1) {
         final float robotAngle = (float) Math.toRadians(OrbitGyro.getAngle());
          Vector velocity_RobotCS_W = velocity_W.rotate(-robotAngle);
-
-        driveFactor = DrivetrainConstants.power;
-
+        if (SubSystemManager.wanted == RobotState.MIN || SubSystemManager.wanted == RobotState.LOW){
+            driveFactor = DrivetrainConstants.slowPower;
+        } else if (SubSystemManager.wanted == RobotState.MID) {
+            driveFactor = DrivetrainConstants.superSlowPower;
+            if (omega > 0){
+                omega = DrivetrainConstants.MaxOmegaSlow;
+            } else if (omega < 0) {
+                omega = -DrivetrainConstants.MaxOmegaSlow;
+            }else {
+                omega = 0;
+            }
+        }else {
+            driveFactor = DrivetrainConstants.power;
+        }
 
         if(velocity_RobotCS_W.norm() <= Math.sqrt(0.005) && Math.abs(omega) == 0 && !gamepad1.left_bumper){
             stop();
@@ -89,6 +102,18 @@ public class Drivetrain {
             motor.setPower(0);
         }
 
+    }
+    public static void moveFor(){
+        motors[0].setPower(0.5);
+        motors[1].setPower(0.5);
+        motors[2].setPower(0.5);
+        motors[3].setPower(0.5);
+    }
+    public static void  moveBack(){
+        motors[0].setPower(-0.5);
+        motors[1].setPower(-0.5);
+        motors[2].setPower(-0.5);
+        motors[3].setPower(-0.5);
     }
 
     public static void drive(Vector drive, double r) {

@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.robotSubSystems;
 
 import static org.firstinspires.ftc.teamcode.robotSubSystems.drivetrain.DriveTrain.Drivetrain.motors;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DriveByAprilTags.Camera;
+import org.firstinspires.ftc.teamcode.OrbitUtils.Delay;
+import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.Sensors.OrbitGyro;
 import org.firstinspires.ftc.teamcode.positionTracker.PoseStorage;
 import org.firstinspires.ftc.teamcode.robotData.GlobalData;
@@ -14,6 +17,8 @@ import org.firstinspires.ftc.teamcode.robotSubSystems.arm.Arm;
 import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.Pinch;
 import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.PinchConstants;
 import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.PinchStates;
+import org.firstinspires.ftc.teamcode.robotSubSystems.plane.Plane;
+import org.firstinspires.ftc.teamcode.robotSubSystems.plane.PlaneStates;
 
 public class SubSystemManager {
 
@@ -23,6 +28,7 @@ public class SubSystemManager {
     public static ArmStates armState  = ArmStates.GROUND;
     public static boolean  armToggleButton = false;
     public static PinchStates pinchState = PinchStates.CLOSED;
+    public static Delay armDelay = new Delay(0.3f);
 
 
 
@@ -35,7 +41,7 @@ public class SubSystemManager {
                 : gamepad.dpad_up ? RobotState.MIN
                 :gamepad.x ? RobotState.LOW
                 : gamepad.y ? RobotState.MID
-                : gamepad.back ? RobotState.CLIMB : gamepad.dpad_left ? RobotState.STACK
+                : gamepad.dpad_left ? RobotState.STACK
                 : lastState;
     }
 
@@ -62,12 +68,14 @@ public class SubSystemManager {
     public static void setSubsystemToState(Gamepad gamepad1, Gamepad gamepad2) {
         wanted = getState(gamepad1);
 
-
+        if (wanted == RobotState.TRAVEL && lastState != RobotState.TRAVEL){
+            armDelay.startAction(GlobalData.currentTime);
+        }
 
 
         switch (wanted) {
             case TRAVEL:
-              if (!armToggleButton){
+              if (!armToggleButton && armDelay.isDelayPassed()){
                   armState = ArmStates.TRAVEL;
               }
               pinchState = PinchStates.CLOSED;
@@ -88,15 +96,20 @@ public class SubSystemManager {
                 if (!armToggleButton) {
                     armState = ArmStates.MIN;
                 }
-                pinchState = PinchStates.OPEN;
+                if (gamepad1.left_bumper){
+                    pinchState = PinchStates.RIGHT;
+                } else if (gamepad1.right_bumper) {
+                    pinchState = PinchStates.LEFT;
+                }
+
                 break;
             case LOW:
                 if (!armToggleButton) {
-                    armState = ArmStates.LOW;
+                       armState = ArmStates.LOW;
                 }
-                if (gamepad1.left_bumper){
+                if (gamepad1.right_bumper){
                     pinchState = PinchStates.LEFT;
-                } else if (gamepad1.right_bumper) {
+                } else if (gamepad1.left_bumper) {
                     pinchState = PinchStates.RIGHT;
                 }
                 break;
@@ -105,16 +118,10 @@ public class SubSystemManager {
                     armState = ArmStates.MID;
                 }
                 if (gamepad1.left_bumper){
-                    pinchState = PinchStates.LEFT;
-                } else if (gamepad1.right_bumper) {
                     pinchState = PinchStates.RIGHT;
+                } else if (gamepad1.right_bumper) {
+                    pinchState = PinchStates.LEFT;
                 }
-                break;
-            case CLIMB:
-                if (!armToggleButton) {
-                    armState = ArmStates.CLIMB;
-                }
-                pinchState = PinchStates.CLOSED;
                 break;
             case STACK:
                 if (!armToggleButton) {
@@ -138,7 +145,7 @@ public class SubSystemManager {
 
 
         lastState = wanted;
-//        if (gamepad1.touchpad_finger_1) Plane.operate(PlaneStates.THROW);
+        if (gamepad1.back) Plane.operate(PlaneStates.THROW);
         if (gamepad1.dpad_down) OrbitGyro.resetGyro();
     }
 
@@ -155,12 +162,14 @@ public class SubSystemManager {
         telemetry.addData("rf power" , motors[1].getPower());
         telemetry.addData("lb power" , motors[2].getPower());
         telemetry.addData("rb power" , motors[3].getPower());
+        telemetry.addData("arm power" , GlobalData.armPower);
 //        telemetry.addData("distance in inch", OrbitDistanceSensor.getDistance());
 //        telemetry.addData("color", OrbitColorSensor.hasGamePiece());
 //        telemetry.addData("magnetic press?", MagneticSensor.getState());
 //        telemetry.addData("touchSensor press?", TouchSensor.getState());
 //        telemetry.addData("potentiometer", Potentiometer.getVolt());
         telemetry.update();
+
     }
 }
 

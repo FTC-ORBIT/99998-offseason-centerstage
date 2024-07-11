@@ -33,7 +33,7 @@ motor:
 servo:
 
 o - pinchServo
-1 -
+1 - planeServo
 2 -
 3 -
 4 -

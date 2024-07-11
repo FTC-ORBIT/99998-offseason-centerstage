@@ -5,7 +5,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import java.time.ZonedDateTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.DriveByAprilTags.Camera;
 import org.firstinspires.ftc.teamcode.Sensors.OrbitGyro;
 import org.firstinspires.ftc.teamcode.positionTracker.PoseStorage;
@@ -15,6 +17,8 @@ import org.firstinspires.ftc.teamcode.robotSubSystems.arm.ArmStates;
 import org.firstinspires.ftc.teamcode.robotSubSystems.RobotState;
 import org.firstinspires.ftc.teamcode.robotSubSystems.drivetrain.DriveTrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.robotSubSystems.pinch.Pinch;
+import org.firstinspires.ftc.teamcode.robotSubSystems.plane.Plane;
+
 
 @Config
 @TeleOp(name = "test")
@@ -22,6 +26,7 @@ public class Test extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        waitForStart();
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
 
@@ -45,15 +50,18 @@ public class Test extends LinearOpMode {
         GlobalData.hasGamePiece = false; */
 
 //        Arm.init(hardwareMap,"armMotor");
-        Pinch.init(hardwareMap,"pinchServo","pinchServo2");
+       /* Pinch.init(hardwareMap,"pinchServo","pinchServo2");
         Drivetrain.init(hardwareMap);
-        waitForStart();
+        waitForStart(); */
 
-        while (!isStopRequested()) {
-            Pinch.test(gamepad1, telemetry);
+
+
+
+
+
         }
     }
-}
+
 //dani yalechan!
 // yoel yalechan!
 
