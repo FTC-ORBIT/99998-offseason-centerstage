@@ -39,7 +39,7 @@ public class Arm {
 
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-
+    //arm positions switch case to change target pos based on input from controller
     public static void operate(ArmStates state, Gamepad gamepad1, Gamepad gamepad2) {
         switch (state) {
             case GROUND:
@@ -67,19 +67,34 @@ public class Arm {
                 pos += -gamepad1.right_stick_y * ArmConstants.overrideFactor;
                 break;
         }
+        //convert target pos in ticks to target pos in rad
         Target_Rad_Pose = (pos - ArmConstants.Magic_Arm_Zero) * ArmConstants.Magic_Click_to_rad;
+        //convert currentPos in ticks to currentPos in rad
         currentPos = armMotor.getCurrentPosition();
-
         Pos_A_Rad = (currentPos - ArmConstants.Magic_Arm_Zero) * ArmConstants.Magic_Click_to_rad;
+
+        //calculate error (distance from target to actual)
         final double pos_error = Target_Rad_Pose - Pos_A_Rad;
+
+        //calculate acceleration to max velocity
         final double v_accel = Math.abs(W_V_Prev) + ArmConstants.Magic_Acc * Constants.teleopCycleTime;
+
+        //calculate deacceleration to stop
         final double v_decel = Math.sqrt(2 * ArmConstants.Magic_Acc * Math.abs(Target_Rad_Pose - Pos_A_Rad));
+
+        //calculate the wanted velocity by choosing the smallest number variable from the acceleration, deacceleration and max velocity
         W_V = Math.min(Math.min(v_accel, ArmConstants.Magic_Velocity_Max), v_decel);
         W_V = W_V * Math.signum(pos_error);
-        Magic_W_Acc = (W_V - W_V_Prev) / Constants.teleopCycleTime;
-        W_Pos = W_Pos_Prev + W_V_Prev * Constants.teleopCycleTime + 0.5* Magic_W_Acc * Math.pow(Constants.teleopCycleTime, 2);
 
+        //calculate wanted acceleration by deviding the change in velocity at new code cycle by the code cycle time to get the value of the needed acceleration at each new code cycle
+        Magic_W_Acc = (W_V - W_V_Prev) / Constants.teleopCycleTime;
+
+        //calculate wanted pos at each new cycle of the code by
+        W_Pos = W_Pos_Prev + W_V_Prev * Constants.teleopCycleTime + (0.5 * Magic_W_Acc) * Math.pow(Constants.teleopCycleTime, 2);
+
+        //calculate needed power to overcome gravity turque by multiplying the gravitational force on the arm at horizontal pos by the sin of the arm's distance from its vertical pos (Pos_A_Rad)
         Pg = -ArmConstants.MagicPg0 * Math.sin(Pos_A_Rad);
+        //
         Pv = W_V * ArmConstants.Magic_Kv;
         if (Math.abs(Target_Rad_Pose - Pos_A_Rad) < 0.05) {
             Pv = 0;
