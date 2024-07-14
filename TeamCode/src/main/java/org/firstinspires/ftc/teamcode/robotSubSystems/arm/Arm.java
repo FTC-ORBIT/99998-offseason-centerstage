@@ -39,7 +39,7 @@ public class Arm {
 
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-    //arm positions switch case to change target pos based on input from controller
+    //arm positions switch case to change target pos based on input from controllerg
     public static void operate(ArmStates state, Gamepad gamepad1, Gamepad gamepad2) {
         switch (state) {
             case GROUND:
