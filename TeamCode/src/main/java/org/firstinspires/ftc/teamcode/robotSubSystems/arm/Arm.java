@@ -67,7 +67,7 @@ public class Arm {
                 pos += -gamepad1.right_stick_y * ArmConstants.overrideFactor;
                 break;
         }
-        //convert target pos in ticks to target pos in rad
+        //convert target pos in ticks to target pos in radians
         Target_Rad_Pose = (pos - ArmConstants.Magic_Arm_Zero) * ArmConstants.Magic_Click_to_rad;
         //convert currentPos in ticks to currentPos in rad
         currentPos = armMotor.getCurrentPosition();
